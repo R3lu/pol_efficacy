@@ -60,17 +60,259 @@ save(selected, file = "selected.Rdata")
 ```
 
 ```{r}
+load("selected.Rdata")
 ess_sub <- ess %>%
-  select(selected$index)
+  select(selected$index, hinctnta, trstprt, trstplt, edulvlb, -trstun) %>%
+  rename(
+    id = idno,
+    news_pol = nwspol,
+    inet = netusoft,
+    poli_intr = polintr,
+    have_say = psppsgva,
+    pol_grp = actrolga,
+    have_infl = psppipla, # double?
+    in_eff = cptppola,
+    trust_parl = trstprl, 
+    trust_pol = trstplt,
+    trust_party = trstprt,
+    trust_leg = trstlgl,
+    trust_police = trstplc,
+    trust_eu = trstep,
+    vote_at = prtvtbat,
+    vote_be = prtvtcbe,
+    vote_ch = prtvtfch, 
+    vote_cz = prtvtdcz, 
+    vote_e1 = prtvede1, 
+    vote_fi = prtvtdfi, 
+    vote_fr = prtvtcfr,
+    vote_gb = prtvtbgb,
+    vote_ie = prtvtbie,
+    vote_il = prtvtcil,
+    vote_is = prtvtbis,
+    vote_nl = prtvtfnl,
+    vote_no = prtvtbno,
+    vote_se = prtvtbse,
+    vote_si = prtvtesi,
+    party_act = wrkprty,
+    sign_pet = sgnptit,
+    demo = pbldmn,
+    lrscale = lrscale,
+    s_life = stflife,
+    s_econ = stfeco,
+    s_gov = stfgov,
+    s_dem = stfdem,
+    state_edu = stfedu,
+    sate_health = stfhlth,
+    eu_state = euftf,
+    imm_econ = imbgeco,
+    imm_same = imsmetn,
+    imm_diff = imdfetn,
+    imm_poor = impcntr,
+    rel = rlgatnd,
+    citz = ctzcntr,
+    social_lazy = sblazy,
+    gndr = gndr,
+    year = yrbrn,
+    edu_year = eduyrs,
+    edu = edulvlb,	
+    income = hinctnta,
+    region = region
+  )
+#dput(selected$var_codes)
 ```
 
 List all variables (old and new names) as well as their range of levels. 
 
-* `new_name` (`old_name`): Description.
+**List of variables for eda**
+
+* `id` (`idno`):
+* `cntry` (`cntry`):
+* `news_pol` (`nwspol`):
+* `inet` (`netusoft`):
+* `poli_intr` (`polintr`):
+* `have_say` (`psppsgva`):
+* `pol_grp` (`actrolga`):
+* `have_infl` (`psppipla`):
+* `in_eff` 
+    * `pol_conf` (`cptppola`):
+    * `pol_grp` (`pol_grp`):
+* `ex_eff`
+    + `trust_parl` (`trstlgl`):
+    + `trust_leg` (`trstlgl`)
+    + `trust_police` (`trstplc`):
+    + `trust_eu` (`trstep`):
+    + ~~`trust_un` (`trstun`):~~
+* `vote_nat`
+    + `vote_at` (`prtvtbat`):
+    + `vote_be` (`prtvtcbe`):
+    + `vote_ch` (`prtvtfch`):
+    + `vote_cz` (`prtvtdcz`):
+    + `vote_e1` (`prtvede1`):
+    + `vote_fi` (`prtvtdfi`):
+    + `vote_fr` (`prtvtcfr`):
+    + `vote_gb` (`prtvtbgb`):
+    + `vote_ie` (`prtvtbie`):
+    + `vote_il` (`prtvtcil`):
+    + `vote_is` (`prtvtbis`):
+    + `vote_nl` (`prtvtfnl`):
+    + `vote_no` (`prtvtbno`):
+    + `vote_se` (`prtvtbse`):
+    + `vote_si` (`prtvtesi`):
+* `party_act` (`wrkprty`):
+* `sign_pet` (`sgnptit`):
+* `demo` (`pbldmn`):
+* `lrscale` (`lrscale`):
+* `s_life` (`stflife`):
+* `s_econ` (`stfeco`):
+* `s_gov` (`stfgov`):
+* `s_dem` (`stfdem`):
+* `state_edu` (`stfedu`):
+* `sate_health` (`stfhlth`):
+* `eu_state` (`euftf`):
+* `imm`
+    + `imm_econ` (`imbgeco`):
+    + `imm_same` (`imsmetn`):
+    + `imm_diff` (`imdfetn`):
+    + `imm_poor` (`impcntr`):
+* `rel` (`rlgatnd`):
+* `citz` (`ctzcntr`):
+* `social_lazy` (`sblazy`):
+* `gndr` (`gndr`):
+* `year` (`yrbrn`):
+* `edu_year` (`eduyrs`):
+* `income` (`hinctnta`):
+* `region` (`region`):
 
 
-## Data Cleaning
+```{r}
+ess_clean <- ess_sub  %>% 
+  mutate_if(.predicate = is.double, .funs = as.integer) %>%
+  mutate_if(.predicate = is.character, .funs = as.character) %>%
+  mutate_if(.predicate = is.factor, .funs = as.factor) %>%
+  mutate(eu_member =
+           recode_factor(cntry,
+                DE = 1958,
+                BE = 1958,
+                FR = 1958,
+                NL = 1958,
+                IE = 1973,
+                GB = 1973,
+                FI = 1995,
+                AT = 1995,
+                SE = 1995,
+                EE = 2004,
+                PL = 2004,
+                SI = 2004,
+                CZ = 2004,
+                CH = 0,
+                IL = 0,
+                IS = 0,
+                NO = 0,
+                RU = 0
+              )
+        ) %>%
+  mutate(post_com = ifelse(region %in% c("Estonia", "Poland", "Slovenia", "Czech Republic", "Russian Federation"), "Post C", "West"))
+
+glimpse(ess_clean)
+length(table(ess_sub$cntry))
+```
+
+## Get Info
+
+* better left-right scale more athoritarian
+* horse shoe theory
+* 
+
+
+## Data 
+
+* party recoding
+* Inspect each variable with a histogram or barplot, check range and validate data. 
+
+
+
+## EDA
+
+* Check selective or pairwise compare correlations (stepwiseAIC or multilevel predction tree).
+* spatial mapping
+* Factor scores (Factor Analysis)
+    + Trust (target)
+    + Imm (X)
+
+```{r eda1, echo = F, fig.height=6, fig.width=10, results="show"}
+# citizens trust in european institutions 
+d <- ess_sub
+
+# graph settings
+set_theme(geom.outline.color = "antiquewhite4", 
+          geom.outline.size = 1, 
+          geom.label.size = 2,
+          geom.label.color = "grey50",
+          title.color = "black", 
+          title.size = 1.5, 
+          axis.angle.x = 45, 
+          axis.textcolor = "black", 
+          base = theme_bw())
+
+p1 <- sjp.frq(d$trust_parl, 
+        type = "hist", 
+        show.mean = TRUE, 
+        show.values = FALSE, 
+        geom.colors = "#336699", prnt.plot = F)
+
+p2 <- sjp.frq(d$trust_leg, 
+        type = "hist", 
+        show.mean = TRUE, 
+        show.values = FALSE, 
+        geom.colors = "#336699", prnt.plot = F)
+
+p3 <- sjp.frq(d$trust_police, 
+        type = "hist", 
+        show.mean = TRUE, 
+        show.values = FALSE, 
+        geom.colors = "#336699", prnt.plot = F)
+
+p4 <- sjp.frq(d$trust_parl, 
+        type = "hist", 
+        show.mean = TRUE, 
+        show.values = FALSE, 
+        geom.colors = "#336699", prnt.plot = F)
+
+p5 <- sjp.frq(d$trust_party, 
+        type = "hist", 
+        show.mean = TRUE, 
+        show.values = FALSE, 
+        geom.colors = "#336699", prnt.plot = F)
+
+p6 <- sjp.frq(d$trust_pol, 
+        type = "hist", 
+        show.mean = TRUE, 
+        show.values = FALSE, 
+        geom.colors = "#336699", prnt.plot = F)
+
+library(gridExtra)
+grid.arrange(p1$plot, p2$plot, p3$plot, p4$plot, p5$plot, p6$plot, nrow = 3, top = grid::textGrob("Trust in Political Institutions", vjust = 0.5, gp = grid::gpar(fontface = "bold", cex = 2)))
+```
 
 
 
 
+## Statistical Modeling
+
+### Multilevel 
+
+* Y = voting right wing/populist
+* X_1 = ex_eff (trust factor scores) + in_eff
+* X_2 = immigration(factor scores)
+* X_3 = s_gov + s_dem + interaction + demo + sign_pet
+* X_4 = poli_intr + lrscale + party_act + news_pol
+* X_5 = gndr + edu + income + rel + year
+* X_6 = social_lazy (social benefit attitudes)
+* What about Z predictors?
+
+
+### Prection Power
+
+* multilevel tree
+* `brms`
+* viele random slopes
