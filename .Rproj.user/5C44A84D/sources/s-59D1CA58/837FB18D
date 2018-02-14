@@ -1,0 +1,23 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1518617880254.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "837FB18D",
+    "lastKnownWriteTime" : 1518619819,
+    "last_content_update" : 1518619819455,
+    "path" : "~/Dropbox/GITHUB/pol_efficacy/script.Rmd",
+    "project_path" : "script.Rmd",
+    "properties" : {
+        "chunk_output_type" : "inline",
+        "cursorPosition" : "53,21",
+        "scrollLine" : "41"
+    },
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

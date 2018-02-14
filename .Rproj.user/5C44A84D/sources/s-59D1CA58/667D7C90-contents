@@ -23,16 +23,10 @@ output: html_notebook
 * Multilevel-Baysian Regression. 
 
 
-
-## Variable Selection  
-
-
-
 ## Packages
 
 ```{r}
 pacman::p_load(dplyr, ggplot2, readr, haven, broom, purrr, tidyr, magrittr, labelled, sjPlot)
-
 #devtools::install_github("larmarange/labelled")
 ```
 
@@ -45,7 +39,7 @@ ess <- read_sav("data/ESS8e01.sav")
 First, inspect the data.
 
 ```{r}
-dim(ess)
+dim(ess_big)
 dplyr::glimpse(ess)
 ```
 
@@ -55,8 +49,7 @@ dplyr::glimpse(ess)
 
 ```{r}
 #devtools::install_github("systats/binoculaR", force = T)
-selected <- binoculaR::binoculaR(ess)
-save(selected, file = "selected.Rdata")
+selected <- binoculaR(ess)
 ```
 
 ```{r}
@@ -70,6 +63,7 @@ List all variables (old and new names) as well as their range of levels.
 
 
 ## Data Cleaning
+
 
 
 
