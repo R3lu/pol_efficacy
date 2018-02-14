@@ -1,0 +1,4 @@
+"0","```r
+pacman::p_load(dplyr, ggplot2, readr, haven, broom, purrr, tidyr, magrittr, labelled, sjPlot)
+#devtools::install_github(\"larmarange/labelled\")
+```"
