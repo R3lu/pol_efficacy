@@ -230,6 +230,25 @@ length(table(ess_sub$cntry))
 * Inspect each variable with a histogram or barplot, check range and validate data. 
 
 
+### Block 5
+
+* clean Variables
+* document range
+
+```{r}
+p5 <- ess_clean %>%
+  select(gndr, edu, income, rel, year) %>%
+  gather("var", "value") %>%
+  ggplot(aes(value, fill = var)) +
+  geom_bar() +
+  facet_wrap(~var, scales = "free") +
+  viridis::scale_fill_viridis(discrete = T)
+p5
+```
+
+
+
+
 
 ## EDA
 
@@ -244,15 +263,15 @@ length(table(ess_sub$cntry))
 d <- ess_sub
 
 # graph settings
-set_theme(geom.outline.color = "antiquewhite4", 
-          geom.outline.size = 1, 
-          geom.label.size = 2,
-          geom.label.color = "grey50",
+set_theme(#geom.outline.color = "antiquewhite4", 
+          #geom.outline.size = 1, 
+          #geom.label.size = 2,
+          #geom.label.color = "grey50",
           title.color = "black", 
           title.size = 1.5, 
           axis.angle.x = 45, 
           axis.textcolor = "black", 
-          base = theme_bw())
+          base = theme_538())
 
 p1 <- sjp.frq(d$trust_parl, 
         type = "hist", 
